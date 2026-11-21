@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JF Turismo | Passagens Rodoviárias na Paraíba</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jfblue: '#0A2239',
+                        jfyellow: '#FFB703',
+                        jflight: '#F4F6F9',
+                        jfcard: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-jflight text-slate-800 font-sans antialiased pb-24">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-jfblue text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-jfyellow text-jfblue font-black p-2 rounded-xl text-xl flex items-center justify-center shadow">
+                    <i class="fa-solid fa-bus"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">JF TURISMO</h1>
+                    <p class="text-[10px] text-jfyellow font-medium tracking-wider uppercase">Paraíba em Movimento</p>
+                </div>
+            </div>
+            <div id="header-user-section" class="flex items-center space-x-2"></div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-md mx-auto px-4 py-4">
+
+        <!-- ABA 1: INÍCIO / BUSCA -->
+        <div id="tab-home" class="space-y-4 tab-content">
+            <div class="bg-gradient-to-r from-jfblue to-slate-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <div class="absolute right-[-20px] bottom-[-20px] text-white/10 text-8xl font-black">
+                    <i class="fa-solid fa-route"></i>
+                </div>
+                <span class="bg-jfyellow text-jfblue text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Eixo Principal Paraíba</span>
+                <h2 class="text-xl font-bold mt-2">João Pessoa ⇄ Campina Grande</h2>
+                <p class="text-xs text-slate-300 mt-1">Saídas de hora em hora (07:00 às 20:00). Ônibus executivos climatizados com Wi-Fi.</p>
+            </div>
+
+            <!-- Caixa de Busca -->
+            <div class="bg-jfcard rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Para onde você vai?</h3>
+                
+                <div class="relative space-y-2">
+                    <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5">
+                        <i class="fa-solid fa-circle-dot text-emerald-600 mr-3 text-sm"></i>
+                        <div class="flex-1">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Origem</span>
+                            <select id="search-origin" class="w-full bg-transparent text-sm font-semibold text-slate-800 focus:outline-none">
+                                <option value="João Pessoa">Terminal Severino Camelo (João Pessoa)</option>
+                                <option value="Campina Grande">Terminal Argemiro de Figueiredo (Campina Grande)</option>
+                                <option value="Guarabira">Terminal Rodoviário de Guarabira</option>
+                                <option value="Mamanguape">Terminal Rodoviário de Mamanguape</option>
+                                <option value="Itabaiana">Terminal Rodoviário de Itabaiana</option>
+                                <option value="Monteiro">Terminal Rodoviário de Monteiro</option>
+                                <option value="Patos">Terminal Rodoviário de Patos</option>
+                                <option value="Sousa">Terminal Rodoviário de Sousa</option>
+                                <option value="Cajazeiras">Terminal Rodoviário de Cajazeiras</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center -my-2 z-10 relative">
+                        <button onclick="swapTerminals()" class="bg-jfblue text-jfyellow w-8 h-8 rounded-full shadow flex items-center justify-center hover:scale-110 transition">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5">
+                        <i class="fa-solid fa-location-dot text-rose-600 mr-3 text-sm"></i>
+                        <div class="flex-1">
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase">Destino</span>
+                            <select id="search-destination" class="w-full bg-transparent text-sm font-semibold text-slate-800 focus:outline-none">
+                                <option value="Campina Grande" selected>Terminal Argemiro de Figueiredo (Campina Grande)</option>
+                                <option value="João Pessoa">Terminal Severino Camelo (João Pessoa)</option>
+                                <option value="Guarabira">Terminal Rodoviário de Guarabira</option>
+                                <option value="Mamanguape">Terminal Rodoviário de Mamanguape</option>
+                                <option value="Itabaiana">Terminal Rodoviário de Itabaiana</option>
+                                <option value="Monteiro">Terminal Rodoviário de Monteiro</option>
+                                <option value="Patos">Terminal Rodoviário de Patos</option>
+                                <option value="Sousa">Terminal Rodoviário de Sousa</option>
+                                <option value="Cajazeiras">Terminal Rodoviário de Cajazeiras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Data da Viagem</label>
+                    <input type="date" id="search-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-jfblue">
+                </div>
+
+                <button onclick="searchTrips()" class="w-full bg-jfblue text-jfyellow font-bold py-3 rounded-xl shadow hover:bg-slate-900 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Buscar Passagens Disponíveis</span>
+                </button>
+            </div>
+
+            <!-- Lista de Viagens -->
+            <div id="trips-results-container" class="space-y-3"></div>
+        </div>
+
+        <!-- ABA 2: MINHAS VIAGENS -->
+        <div id="tab-trips" class="space-y-4 tab-content hidden">
+            <h2 class="text-base font-bold text-slate-800 flex items-center justify-between">
+                <span>Minhas Viagens & Bilhetes</span>
+                <span id="my-trips-count" class="text-xs bg-jfblue text-white px-2 py-0.5 rounded-full">0</span>
+            </h2>
+            <div id="my-trips-container" class="space-y-3"></div>
+        </div>
+
+        <!-- ABA 3: GARAGEM & FINANCEIRO (ADMIN / MOTORISTA) -->
+        <div id="tab-garage" class="space-y-4 tab-content hidden">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between">
+                <div>
+                    <h3 class="text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center">
+                        <i class="fa-solid fa-circle-check text-emerald-600 mr-2"></i> Gateway Ativo
+                    </h3>
+                    <p class="text-[11px] text-emerald-700 mt-0.5 font-mono">Chave: Kvk_live_063a...eb5e</p>
+                </div>
+                <span class="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">ONLINE</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Faturamento Total</span>
+                    <p id="admin-total-revenue" class="text-lg font-black text-emerald-600 mt-1">R$ 0,00</p>
+                </div>
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Passagens Vendidas</span>
+                    <p id="admin-total-tickets" class="text-lg font-black text-jfblue mt-1">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="switchAdminSubTab('fleet')" id="btn-sub-fleet" class="bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow transition">Extrato & Frota</button>
+                <button onclick="switchAdminSubTab('validator')" id="btn-sub-validator" class="bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl transition">Validar Bilhete</button>
+            </div>
+
+            <div id="admin-sub-fleet" class="space-y-4">
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xs font-bold text-slate-700 uppercase">Transações Recebidas</h4>
+                        <span class="text-[10px] text-slate-400">Tempo real</span>
+                    </div>
+                    <div id="admin-transactions-list" class="space-y-2 text-xs">
+                        <p class="text-slate-400">Nenhuma venda registrada ainda.</p>
+                    </div>
+                </div>
+
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase">Lançar Ônibus Extra</h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="extra-origin" placeholder="Origem" class="bg-slate-50 border border-slate-200 p-2 rounded-xl text-xs">
+                        <input type="text" id="extra-destination" placeholder="Destino" class="bg-slate-50 border border-slate-200 p-2 rounded-xl text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="time" id="extra-time" class="bg-slate-50 border border-slate-200 p-2 rounded-xl text-xs">
+                        <input type="number" id="extra-price" placeholder="Preço (R$)" value="42.00" class="bg-slate-50 border border-slate-200 p-2 rounded-xl text-xs">
+                    </div>
+                    <button onclick="addExtraBus()" class="w-full bg-jfblue text-jfyellow font-bold py-2.5 rounded-xl text-xs shadow hover:bg-slate-900 transition">
+                        <i class="fa-solid fa-plus-circle mr-1"></i> Publicar Ônibus Extra
+                    </button>
+                </div>
+            </div>
+
+            <div id="admin-sub-validator" class="space-y-3 hidden">
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase">Validação de Embarque</h4>
+                    <p class="text-xs text-slate-500">Digite o código do bilhete (ex: JFT-12345) para confirmar o embarque:</p>
+                    <div class="flex space-x-2">
+                        <input type="text" id="validator-code" placeholder="Ex: JFT-84920" class="flex-1 bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs uppercase font-mono">
+                        <button onclick="validateTicketCode()" class="bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow">Validar</button>
+                    </div>
+                    <div id="validator-result" class="p-3 rounded-xl text-xs font-medium hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 4: PERFIL & CONTA -->
+        <div id="tab-profile" class="space-y-4 tab-content hidden">
+            <div id="profile-logged-out" class="bg-jfcard p-6 rounded-2xl shadow-sm border border-slate-100 text-center space-y-4">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800">Acesse sua conta</h3>
+                    <p class="text-xs text-slate-500 mt-1">Entre como passageiro para comprar ou como administrador para ver o caixa.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="openAuthModal('login')" class="bg-jfblue text-jfyellow font-bold py-2.5 rounded-xl text-xs shadow">Entrar</button>
+                    <button onclick="openAuthModal('register')" class="bg-slate-100 text-slate-700 font-bold py-2.5 rounded-xl text-xs">Criar Conta</button>
+                </div>
+            </div>
+
+            <div id="profile-logged-in" class="bg-jfcard p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4 hidden">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-jfblue text-jfyellow rounded-full flex items-center justify-center text-xl font-bold" id="user-avatar-initials">JP</div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base" id="user-display-name">Nome</h3>
+                        <p class="text-xs text-slate-500" id="user-display-email">email</p>
+                        <span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold" id="user-display-role">Passageiro</span>
+                    </div>
+                </div>
+                <hr class="border-slate-100">
+                <button onclick="logout()" class="w-full bg-rose-50 text-rose-600 font-bold py-2.5 rounded-xl text-xs hover:bg-rose-100 transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Sair da Conta
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bg-white border-t border-slate-200 fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto shadow-lg">
+        <div class="grid grid-cols-4 py-2 text-center" id="bottom-nav-grid">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-jfblue font-bold">
+                <i class="fa-solid fa-magnifying-glass text-base"></i>
+                <span class="text-[10px] mt-1">Buscar</span>
+            </button>
+            <button onclick="switchTab('trips')" id="nav-trips" class="flex flex-col items-center text-slate-400 hover:text-jfblue transition">
+                <i class="fa-solid fa-ticket text-base"></i>
+                <span class="text-[10px] mt-1">Viagens</span>
+            </button>
+            <button onclick="switchTab('garage')" id="nav-garage" class="flex flex-col items-center text-slate-400 hover:text-jfblue transition hidden">
+                <i class="fa-solid fa-warehouse text-base"></i>
+                <span class="text-[10px] mt-1">Garagem</span>
+            </button>
+            <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-slate-400 hover:text-jfblue transition">
+                <i class="fa-solid fa-user text-base"></i>
+                <span class="text-[10px] mt-1">Perfil</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MODAL DE AUTENTICAÇÃO -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-5 space-y-4 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-base"></i></button>
+            <div class="text-center">
+                <h3 id="auth-modal-title" class="text-lg font-bold text-slate-800">Entrar na JF Turismo</h3>
+                <p class="text-xs text-slate-500 mt-1">Informe seus dados para continuar</p>
+            </div>
+            <div class="space-y-3">
+                <div id="auth-name-group" class="hidden">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
+                    <input type="text" id="auth-name" placeholder="Ex: Maria Silva" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">E-mail</label>
+                    <input type="email" id="auth-email" placeholder="seu@email.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Senha</label>
+                    <input type="password" id="auth-pass" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold">
+                </div>
+                <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-jfblue text-jfyellow font-bold py-3 rounded-xl text-xs shadow hover:bg-slate-900 transition">Entrar</button>
+                <div class="text-center pt-2">
+                    <button onclick="toggleAuthMode()" id="auth-toggle-link" class="text-xs text-blue-600 font-semibold hover:underline">Não tem conta? Cadastre-se</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL DE SELEÇÃO DE POLTRONAS & PAGAMENTO -->
+    <div id="seat-checkout-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-jfblue text-white p-4 flex justify-between items-center">
+                <div>
+                    <h3 id="modal-trip-title" class="text-xs font-bold uppercase tracking-wider text-jfyellow">João Pessoa → Campina Grande</h3>
+                    <p id="modal-trip-time" class="text-sm font-bold">08:00 • Executivo</p>
+                </div>
+                <button onclick="closeSeatModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="p-4 overflow-y-auto space-y-4 flex-1">
+                <div id="step-seats" class="space-y-3">
+                    <div class="flex justify-between items-center text-xs text-slate-500 bg-slate-50 p-2 rounded-xl">
+                        <span class="flex items-center"><span class="w-3 h-3 bg-emerald-500 rounded-full inline-block mr-1"></span> Livre</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-slate-400 rounded-full inline-block mr-1"></span> Ocupada</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-jfyellow rounded-full inline-block mr-1"></span> Selecionada</span>
+                    </div>
+
+                    <div class="bg-slate-100 p-4 rounded-2xl border border-slate-200">
+                        <div class="text-center text-[10px] font-bold text-slate-400 uppercase mb-3 pb-2 border-b border-slate-200">
+                            <i class="fa-solid fa-steering-wheel mr-1"></i> Cabine do Motorista
+                        </div>
+                        <div id="bus-seats-grid" class="grid grid-cols-5 gap-2 max-w-[280px] mx-auto"></div>
+                    </div>
+
+                    <button onclick="proceedToCheckout()" id="btn-proceed-checkout" class="w-full bg-jfblue text-jfyellow font-bold py-3 rounded-xl text-xs shadow disabled:opacity-50" disabled>
+                        Ir para Pagamento (R$ <span id="selected-price">0,00</span>)
+                    </button>
+                </div>
+
+                <div id="step-payment" class="space-y-4 hidden">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1">
+                        <div class="flex justify-between text-slate-500">
+                            <span>Processador:</span>
+                            <span class="font-mono font-bold text-emerald-700">Gateway Ativo (Kvk_live)</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-slate-700">
+                            <span>Poltrona(s):</span>
+                            <span id="checkout-seats-summary">01</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-slate-900 text-sm pt-1 border-t border-slate-200">
+                            <span>Total a Pagar:</span>
+                            <span id="checkout-total-amount">R$ 42,00</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="switchPaymentMethod('pix')" id="btn-pay-pix" class="bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow">PIX Instantâneo</button>
+                        <button onclick="switchPaymentMethod('card')" id="btn-pay-card" class="bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl">Cartão de Crédito</button>
+                    </div>
+
+                    <div id="payment-pix-content" class="space-y-3 text-center py-2">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 inline-block shadow-sm">
+                            <i class="fa-solid fa-qrcode text-6xl text-slate-800"></i>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Chave PIX gerada pelo gateway para pagamento imediato:</p>
+                        <input type="text" readonly value="00020126580014br.gov.bcb.pix.jfturismo.kvk_live_063aa3c4" class="w-full bg-slate-100 border border-slate-200 p-2 rounded-xl text-[10px] font-mono text-center">
+                        <button onclick="processGatewayPayment('PIX')" id="btn-confirm-pix" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow hover:bg-emerald-700 transition">
+                            Confirmar Pagamento PIX
+                        </button>
+                    </div>
+
+                    <div id="payment-card-content" class="space-y-3 hidden">
+                        <input type="text" placeholder="Número do Cartão" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" placeholder="MM/AA" class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs">
+                            <input type="text" placeholder="CVV" class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs">
+                        </div>
+                        <input type="text" placeholder="Nome Impresso no Cartão" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl text-xs">
+                        <button onclick="processGatewayPayment('Cartão de Crédito')" id="btn-confirm-card" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow hover:bg-emerald-700 transition">
+                            Autorizar no Cartão
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PAYMENT_GATEWAY_CONFIG = {
+            apiKey: 'Kvk_live_063aa3c4caad9a17b6089961238b934042683a3a8e35eb5e',
+            environment: 'live'
+        };
+
+        let currentUser = JSON.parse(localStorage.getItem('jf_current_user')) || null;
+        let myBookedTrips = JSON.parse(localStorage.getItem('jf_my_trips')) || [];
+        let adminTransactions = JSON.parse(localStorage.getItem('jf_admin_transactions')) || [];
+        let occupiedSeatsMap = JSON.parse(localStorage.getItem('jf_occupied_seats')) || {};
+        let selectedTripForBooking = null;
+        let selectedSeats = [];
+        let isAuthRegisterMode = false;
+        let pendingTripToBook = null;
+
+        const INTERNAL_STAFF_ACCOUNTS = [
+            { email: 'admin@jfturismo.com.br', pass: 'admin123', name: 'Administrador Geral', role: 'Administrador' },
+            { email: 'motorista@jfturismo.com.br', pass: 'motorista123', name: 'João Carlos (Motorista)', role: 'Motorista' }
+        ];
+
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('search-date');
+            if(dateInput) dateInput.value = today;
+            updateAuthUI();
+            searchTrips();
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) targetTab.classList.remove('hidden');
+
+            ['home', 'trips', 'garage', 'profile'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if(btn) {
+                    btn.classList.remove('text-jfblue', 'font-bold');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('text-jfblue', 'font-bold');
+            }
+
+            if(tabId === 'trips') renderMyTrips();
+            if(tabId === 'garage') renderAdminDashboard();
+        }
+
+        function swapTerminals() {
+            const org = document.getElementById('search-origin');
+            const dest = document.getElementById('search-destination');
+            const temp = org.value;
+            org.value = dest.value;
+            dest.value = temp;
+            searchTrips();
+        }
+
+        function searchTrips() {
+            const origin = document.getElementById('search-origin').value;
+            const destination = document.getElementById('search-destination').value;
+            const date = document.getElementById('search-date').value;
+            const container = document.getElementById('trips-results-container');
+
+            if(!container) return;
+
+            if(origin === destination) {
+                container.innerHTML = `<div class="text-center py-6 text-rose-500 text-xs font-bold bg-white rounded-2xl p-4">A origem e o destino precisam ser diferentes.</div>`;
+                return;
+            }
+
+            let trips = [];
+            const isMainAxis = (origin === 'João Pessoa' && destination === 'Campina Grande') || (origin === 'Campina Grande' && destination === 'João Pessoa');
+
+            if(isMainAxis) {
+                for(let h = 7; h <= 20; h++) {
+                    const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                    const tripKey = `${origin}-${destination}-${date}-${timeStr}`;
+                    const takenCount = (occupiedSeatsMap[tripKey] || []).length;
+                    trips.push({
+                        id: tripKey,
+                        origin: origin,
+                        destination: destination,
+                        time: timeStr,
+                        category: h % 4 === 0 ? 'Ônibus Extra' : 'Executivo Climatizado',
+                        price: 42.00,
+                        date: date,
+                        availableSeats: 42 - takenCount
+                    });
+                }
+            } else {
+                const times = [
+                    { t: '07:30', cat: 'Convencional', p: 35.00 },
+                    { t: '13:30', cat: 'Executivo', p: 45.00 },
+                    { t: '18:30', cat: 'Noturno', p: 45.00 }
+                ];
+                trips = times.map(item => {
+                    const tripKey = `${origin}-${destination}-${date}-${item.t}`;
+                    const takenCount = (occupiedSeatsMap[tripKey] || []).length;
+                    return {
+                        id: tripKey,
+                        origin: origin,
+                        destination: destination,
+                        time: item.t,
+                        category: item.cat,
+                        price: item.p,
+                        date: date,
+                        availableSeats: 42 - takenCount
+                    };
+                });
+            }
+
+            container.innerHTML = trips.map(t => `
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-jfblue bg-blue-50 px-2 py-0.5 rounded-full">${t.time}</span>
+                            <span class="text-[10px] text-slate-400 font-medium">${t.category}</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-800 mt-1.5">${t.origin} → ${t.destination}</h4>
+                        <p class="text-[11px] text-emerald-600 font-semibold mt-0.5">${t.availableSeats} poltronas livres</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase">Valor</span>
+                        <span class="text-base font-black text-slate-900">R$ ${t.price.toFixed(2).replace('.', ',')}</span>
+                        <button onclick='openSeatModal(${JSON.stringify(t)})' class="mt-2 bg-jfyellow text-jfblue text-xs font-bold px-3.5 py-1.5 rounded-xl shadow hover:bg-amber-400 transition block ml-auto">
+                            Escolher
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openSeatModal(trip) {
+            if(!currentUser) {
+                pendingTripToBook = trip;
+                openAuthModal('login');
+                return;
+            }
+
+            selectedTripForBooking = trip;
+            selectedSeats = [];
+            document.getElementById('modal-trip-title').innerText = `${trip.origin} → ${trip.destination}`;
+            document.getElementById('modal-trip-time').innerText = `${trip.time} • ${trip.category} (${trip.date})`;
+            document.getElementById('selected-price').innerText = '0,00';
+            document.getElementById('btn-proceed-checkout').disabled = true;
+
+            renderBusSeats();
+
+            document.getElementById('step-seats').classList.remove('hidden');
+            document.getElementById('step-payment').classList.add('hidden');
+            document.getElementById('seat-checkout-modal').classList.remove('hidden');
+        }
+
+        function closeSeatModal() {
+            document.getElementById('seat-checkout-modal').classList.add('hidden');
+        }
+
+        function renderBusSeats() {
+            const grid = document.getElementById('bus-seats-grid');
+            if(!grid) return;
+            const taken = occupiedSeatsMap[selectedTripForBooking.id] || [];
+            let html = '';
+
+            for(let i = 1; i <= 42; i++) {
+                if(i % 4 === 3 && i <= 40) {
+                    html += `<div></div>`;
+                }
+                const isTaken = taken.includes(i);
+                const isSelected = selectedSeats.includes(i);
+
+                if(isTaken) {
+                    html += `<button disabled class="bg-slate-300 text-slate-500 py-2 rounded-lg text-xs font-bold cursor-not-allowed">${i < 10 ? '0' + i : i}</button>`;
+                } else {
+                    const bgClass = isSelected ? 'bg-jfyellow text-jfblue font-black shadow ring-2 ring-jfblue' : 'bg-emerald-500 text-white font-semibold hover:bg-emerald-600';
+                    html += `<button onclick="toggleSeat(${i})" class="${bgClass} py-2 rounded-lg text-xs transition">${i < 10 ? '0' + i : i}</button>`;
+                }
+            }
+            grid.innerHTML = html;
+        }
+
+        function toggleSeat(seatNum) {
+            const idx = selectedSeats.indexOf(seatNum);
+            if(idx > -1) selectedSeats.splice(idx, 1);
+            else selectedSeats.push(seatNum);
+
+            renderBusSeats();
+            const totalPrice = selectedSeats.length * selectedTripForBooking.price;
+            document.getElementById('selected-price').innerText = totalPrice.toFixed(2).replace('.', ',');
+            document.getElementById('btn-proceed-checkout').disabled = selectedSeats.length === 0;
+        }
+
+        function proceedToCheckout() {
+            document.getElementById('step-seats').classList.add('hidden');
+            document.getElementById('step-payment').classList.remove('hidden');
+
+            const total = selectedSeats.length * selectedTripForBooking.price;
+            document.getElementById('checkout-seats-summary').innerText = selectedSeats.map(s => s < 10 ? '0'+s : s).join(', ');
+            document.getElementById('checkout-total-amount').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function switchPaymentMethod(method) {
+            if(method === 'pix') {
+                document.getElementById('payment-pix-content').classList.remove('hidden');
+                document.getElementById('payment-card-content').classList.add('hidden');
+                document.getElementById('btn-pay-pix').className = 'bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow';
+                document.getElementById('btn-pay-card').className = 'bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl';
+            } else {
+                document.getElementById('payment-pix-content').classList.add('hidden');
+                document.getElementById('payment-card-content').classList.remove('hidden');
+                document.getElementById('btn-pay-card').className = 'bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow';
+                document.getElementById('btn-pay-pix').className = 'bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl';
+            }
+        }
+
+        function processGatewayPayment(methodName) {
+            const btnPix = document.getElementById('btn-confirm-pix');
+            const btnCard = document.getElementById('btn-confirm-card');
+            if(btnPix) btnPix.innerText = 'Processando...';
+            if(btnCard) btnCard.innerText = 'Processando...';
+
+            setTimeout(() => {
+                const ticketCode = 'JFT-' + Math.floor(10000 + Math.random() * 90000);
+                const gatewayTxId = 'TX-' + PAYMENT_GATEWAY_CONFIG.apiKey.slice(9, 17).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
+                const totalAmount = selectedSeats.length * selectedTripForBooking.price;
+
+                if(!occupiedSeatsMap[selectedTripForBooking.id]) {
+                    occupiedSeatsMap[selectedTripForBooking.id] = [];
+                }
+                occupiedSeatsMap[selectedTripForBooking.id].push(...selectedSeats);
+                localStorage.setItem('jf_occupied_seats', JSON.stringify(occupiedSeatsMap));
+
+                const newTripRecord = {
+                    code: ticketCode,
+                    txId: gatewayTxId,
+                    method: methodName,
+                    trip: selectedTripForBooking,
+                    seats: [...selectedSeats],
+                    passenger: currentUser.name,
+                    total: totalAmount,
+                    date: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                };
+
+                myBookedTrips.unshift(newTripRecord);
+                localStorage.setItem('jf_my_trips', JSON.stringify(myBookedTrips));
+
+                adminTransactions.unshift({
+                    id: ticketCode,
+                    txId: gatewayTxId,
+                    user: currentUser.name,
+                    email: currentUser.email,
+                    route: `${selectedTripForBooking.origin} → ${selectedTripForBooking.destination} (${selectedTripForBooking.time})`,
+                    seats: selectedSeats.join(', '),
+                    method: methodName,
+                    amount: totalAmount,
+                    time: new Date().toLocaleString('pt-BR')
+                });
+                localStorage.setItem('jf_admin_transactions', JSON.stringify(adminTransactions));
+
+                if(btnPix) btnPix.innerText = 'Confirmar Pagamento PIX';
+                if(btnCard) btnCard.innerText = 'Autorizar no Cartão';
+                closeSeatModal();
+                searchTrips();
+                switchTab('trips');
+            }, 600);
+        }
+
+        function renderMyTrips() {
+            const container = document.getElementById('my-trips-container');
+            const countEl = document.getElementById('my-trips-count');
+            if(!container) return;
+            if(countEl) countEl.innerText = myBookedTrips.length;
+
+            if(myBookedTrips.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-slate-400 bg-jfcard rounded-2xl border border-slate-100 p-6">
+                        <i class="fa-solid fa-ticket text-3xl mb-2"></i>
+                        <p class="text-xs font-semibold">Você ainda não possui passagens compradas.</p>
+                    </div>
+                `;
+                return;
+            }
+   
+container.innerHTML = myBookedTrips.map(item => `
+                <div class="bg-jfcard p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-mono font-bold text-jfblue bg-blue-50 px-2 py-0.5 rounded">${item.code}</span>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Aprovado • ${item.method}</span>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-800">${item.trip.origin} → ${item.trip.destination}</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Saída: <b>${item.trip.time}</b> • Data: ${item.trip.date}</p>
+                        <p class="text-xs text-slate-500">Poltrona(s): <b>${item.seats.join(', ')}</b> • Passageiro: ${item.passenger}</p>
+                        <p class="text-[10px] font-mono text-slate-400 mt-1">ID Gateway: ${item.txId}</p>
+                    </div>
+                    <div class="pt-2 border-t border-slate-100">
+                        <button onclick='generateTicketPDF(${JSON.stringify(item)})' class="w-full bg-jfblue text-jfyellow font-bold py-2.5 rounded-xl text-xs shadow flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Baixar Bilhete PDF / Enviar no WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateTicketPDF(item) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFillColor(10, 34, 57);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(255, 183, 3);
+            doc.setFontSize(22);
+            doc.text('JF TURISMO', 15, 20);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text('Cartão de Embarque Oficial - Paraíba', 15, 28);
+
+            doc.setTextColor(50, 50, 50);
+            doc.setFontSize(12);
+            doc.text(`Código do Bilhete: ${item.code}`, 15, 55);
+            doc.text(`Transação Gateway: ${item.txId}`, 15, 63);
+            doc.text(`Passageiro: ${item.passenger}`, 15, 73);
+            doc.text(`Origem: ${item.trip.origin}`, 15, 83);
+            doc.text(`Destino: ${item.trip.destination}`, 15, 93);
+            doc.text(`Data e Horário: ${item.trip.date} às ${item.trip.time}`, 15, 103);
+            doc.text(`Poltrona(s): ${item.seats.join(', ')}`, 15, 113);
+            doc.text(`Valor Pago (${item.method}): R$ ${item.total.toFixed(2).replace('.', ',')}`, 15, 123);
+
+            doc.save(`Bilhete_JFTurismo_${item.code}.pdf`);
+            window.open(`https://api.whatsapp.com/send?text=Olá! Segue meu bilhete da JF Turismo (${item.code}) para ${item.trip.origin} → ${item.trip.destination} às ${item.trip.time}.`, '_blank');
+        }
+
+        function openAuthModal(mode) {
+            isAuthRegisterMode = (mode === 'register');
+            const title = document.getElementById('auth-modal-title');
+            const nameGroup = document.getElementById('auth-name-group');
+            const submitBtn = document.getElementById('auth-submit-btn');
+            const toggleLink = document.getElementById('auth-toggle-link');
+            const modal = document.getElementById('auth-modal');
+
+            if(title) title.innerText = isAuthRegisterMode ? 'Criar Conta JF Turismo' : 'Entrar na JF Turismo';
+            if(nameGroup) nameGroup.classList.toggle('hidden', !isAuthRegisterMode);
+            if(submitBtn) submitBtn.innerText = isAuthRegisterMode ? 'Cadastrar' : 'Entrar';
+            if(toggleLink) toggleLink.innerText = isAuthRegisterMode ? 'Já tem conta? Entre aqui' : 'Não tem conta? Cadastre-se';
+            if(modal) modal.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if(modal) modal.classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            openAuthModal(isAuthRegisterMode ? 'login' : 'register');
+        }
+
+        function handleAuthSubmit() {
+            const emailInput = document.getElementById('auth-email');
+            const passInput = document.getElementById('auth-pass');
+            const nameInput = document.getElementById('auth-name');
+
+            const email = emailInput ? emailInput.value.trim() : '';
+            const pass = passInput ? passInput.value.trim() : '';
+            const name = nameInput ? nameInput.value.trim() : '';
+
+            if(!email || !pass) {
+                alert('Preencha e-mail e senha.');
+                return;
+            }
+
+            const staff = INTERNAL_STAFF_ACCOUNTS.find(s => s.email === email && s.pass === pass);
+            if(staff) {
+                currentUser = { name: staff.name, email: staff.email, role: staff.role };
+            } else {
+                if(isAuthRegisterMode && !name) {
+                    alert('Informe seu nome completo.');
+                    return;
+                }
+                currentUser = { name: name || email.split('@')[0], email: email, role: 'Passageiro' };
+            }
+
+            localStorage.setItem('jf_current_user', JSON.stringify(currentUser));
+            closeAuthModal();
+            updateAuthUI();
+
+            if(pendingTripToBook) {
+                const tripToResume = pendingTripToBook;
+                pendingTripToBook = null;
+                openSeatModal(tripToResume);
+            } else if(currentUser.role === 'Administrador') {
+                switchTab('garage');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('jf_current_user');
+            updateAuthUI();
+            switchTab('home');
+        }
+
+        function updateAuthUI() {
+            const headerSection = document.getElementById('header-user-section');
+            const profileLoggedOut = document.getElementById('profile-logged-out');
+            const profileLoggedIn = document.getElementById('profile-logged-in');
+            const navGarage = document.getElementById('nav-garage');
+
+            if(currentUser) {
+                if(headerSection) {
+                    headerSection.innerHTML = `
+                        <span class="text-xs font-bold text-jfyellow">${currentUser.name.split(' ')[0]}</span>
+                        <button onclick="logout()" class="text-xs bg-white/10 px-2.5 py-1 rounded-full"><i class="fa-solid fa-power-off"></i></button>
+                    `;
+                }
+                if(profileLoggedOut) profileLoggedOut.classList.add('hidden');
+                if(profileLoggedIn) profileLoggedIn.classList.remove('hidden');
+                
+                const dispName = document.getElementById('user-display-name');
+                const dispEmail = document.getElementById('user-display-email');
+                const dispRole = document.getElementById('user-display-role');
+                const avatarInit = document.getElementById('user-avatar-initials');
+
+                if(dispName) dispName.innerText = currentUser.name;
+                if(dispEmail) dispEmail.innerText = currentUser.email;
+                if(dispRole) dispRole.innerText = currentUser.role;
+                if(avatarInit) avatarInit.innerText = currentUser.name.slice(0,2).toUpperCase();
+
+                if(navGarage) {
+                    if(currentUser.role === 'Administrador' || currentUser.role === 'Motorista') {
+                        navGarage.classList.remove('hidden');
+                    } else {
+                        navGarage.classList.add('hidden');
+                    }
+                }
+            } else {
+                if(headerSection) {
+                    headerSection.innerHTML = `
+                        <button onclick="openAuthModal('login')" class="text-xs bg-white/10 px-3 py-1.5 rounded-full font-medium">Entrar</button>
+                        <button onclick="openAuthModal('register')" class="text-xs bg-jfyellow text-jfblue px-3.5 py-1.5 rounded-full font-bold">Criar Conta</button>
+                    `;
+                }
+                if(profileLoggedOut) profileLoggedOut.classList.remove('hidden');
+                if(profileLoggedIn) profileLoggedIn.classList.add('hidden');
+                if(navGarage) navGarage.classList.add('hidden');
+            }
+        }
+
+        function switchAdminSubTab(sub) {
+            const btnFleet = document.getElementById('btn-sub-fleet');
+            const btnVal = document.getElementById('btn-sub-validator');
+            const subFleet = document.getElementById('admin-sub-fleet');
+            const subVal = document.getElementById('admin-sub-validator');
+
+            if(sub === 'fleet') {
+                if(subFleet) subFleet.classList.remove('hidden');
+                if(subVal) subVal.classList.add('hidden');
+                if(btnFleet) btnFleet.className = 'bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow';
+                if(btnVal) btnVal.className = 'bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl';
+            } else {
+                if(subFleet) subFleet.classList.add('hidden');
+                if(subVal) subVal.classList.remove('hidden');
+                if(btnVal) btnVal.className = 'bg-jfblue text-jfyellow font-bold text-xs py-2.5 rounded-xl shadow';
+                if(btnFleet) btnFleet.className = 'bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl';
+            }
+        }
+
+        function renderAdminDashboard() {
+            const list = document.getElementById('admin-transactions-list');
+            const revEl = document.getElementById('admin-total-revenue');
+            const tickEl = document.getElementById('admin-total-tickets');
+
+            const totalRev = adminTransactions.reduce((acc, tx) => acc + tx.amount, 0);
+            const totalTickets = adminTransactions.length;
+
+            if(revEl) revEl.innerText = `R$ ${totalRev.toFixed(2).replace('.', ',')}`;
+            if(tickEl) tickEl.innerText = totalTickets;
+
+            if(!list) return;
+
+            if(adminTransactions.length === 0) {
+                list.innerHTML = `<p class="text-slate-400">Nenhuma venda registrada ainda.</p>`;
+                return;
+            }
+
+            list.innerHTML = adminTransactions.map(tx => `
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono font-bold text-jfblue">${tx.id}</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">${tx.method}</span>
+                        </div>
+                        <p class="text-[11px] font-semibold text-slate-700 mt-0.5">${tx.user}</p>
+                        <p class="text-[10px] text-slate-500">${tx.route} • Poltrona: ${tx.seats}</p>
+                        <p class="text-[9px] font-mono text-slate-400">${tx.txId} • ${tx.time}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-black text-emerald-600 text-sm">R$ ${tx.amount.toFixed(2).replace('.', ',')}</span>
+                        <span class="block text-[9px] text-emerald-700 font-bold">LIQUIDADO</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addExtraBus() {
+            const org = document.getElementById('extra-origin').value;
+            const dest = document.getElementById('extra-destination').value;
+            const time = document.getElementById('extra-time').value;
+            if(!org || !dest || !time) {
+                alert('Preencha origem, destino e horário.');
+                return;
+            }
+            alert(`Ônibus Extra publicado: ${org} → ${dest} às ${time}!`);
+        }
+
+        function validateTicketCode() {
+            const codeInput = document.getElementById('validator-code');
+            const resBox = document.getElementById('validator-result');
+            if(!codeInput || !resBox) return;
+
+            const code = codeInput.value.trim().toUpperCase();
+            const found = adminTransactions.find(t => t.id === code);
+
+            resBox.classList.remove('hidden');
+            if(found) {
+                resBox.className = 'p-3 rounded-xl text-xs font-medium bg-emerald-100 text-emerald-800';
+                resBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> <b>Bilhete Válido!</b> Passageiro: ${found.user} (${found.route}).`;
+            } else {
+                resBox.className = 'p-3 rounded-xl text-xs font-medium bg-rose-100 text-rose-800';
+                resBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> Código não encontrado no sistema.`;
+            }
+        }
+    </script>
+</body>
+</html>
+            
